@@ -36,10 +36,10 @@ export default function ChecklistView({ checklist }: Props) {
   }, [checked, storageKey, hydrated]);
 
   const { completed, total, percent } = useMemo(() => {
-    const total = checklist.items.length;
-    const completed = checklist.items.filter((i) => checked[i.id]).length;
+    const total = (checklist.items ?? []).length;
+    const completed = (checklist.items ?? []).filter((i) => checked[i.id]).length;
     return { completed, total, percent: total ? (completed / total) * 100 : 0 };
-  }, [checked, checklist.items]);
+  }, [checked, (checklist.items ?? [])]);
 
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -86,7 +86,7 @@ export default function ChecklistView({ checklist }: Props) {
 
         {/* Items */}
         <ul className="mt-6 space-y-3">
-          {checklist.items.map((item) => {
+          {(checklist.items ?? []).map((item) => {
             const isChecked = !!checked[item.id];
             return (
               <li key={item.id}>

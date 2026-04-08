@@ -9,15 +9,14 @@ export default async function ChecklistPage({
 }) {
   const { type } = await params;
 
-  // `type` may be either a checklist id (e.g. "france-visa-tourist")
-  // or a category (e.g. "visa"). Resolve both.
-  const byId = CHECKLISTS.find((c) => c.id === type);
-  const matches = byId ? [byId] : CHECKLISTS.filter((c) => c.category === type);
+  // Only the legacy flat-items checklists are rendered here.
+  // Rich (sectioned) checklists like the Paris visa have their own routes.
+  const flat = CHECKLISTS.filter((c) => c.items && !c.sections);
+
+  const byId = flat.find((c) => c.id === type);
+  const matches = byId ? [byId] : flat.filter((c) => c.category === type);
 
   if (matches.length === 0) notFound();
 
-  // For now, render the first matching checklist.
-  const checklist = matches[0];
-
-  return <ChecklistView checklist={checklist} />;
+  return <ChecklistView checklist={matches[0]} />;
 }

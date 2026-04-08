@@ -21,7 +21,7 @@ Always cite the official government source when giving requirements.
 Be specific, practical, and encouraging. Never give legal advice — refer to official sources.`;
 
   const stream = await client.messages.stream({
-    model: "claude-sonnet-20250514",
+    model: "claude-sonnet-4-5",
     max_tokens: 1024,
     system: systemPrompt,
     tools: [{ type: "web_search_20250305", name: "web_search" }],
