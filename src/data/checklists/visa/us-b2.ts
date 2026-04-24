@@ -1,0 +1,115 @@
+import type { DocumentChecklist } from "../../checklists";
+
+const CEAC = "https://ceac.state.gov/genniv/";
+const PHOTO_URL = "https://travel.state.gov/content/travel/en/us-visas/visa-information-resources/photos.html";
+
+const US_VISA_PHOTO = {
+  maxBytes: 240 * 1024,
+  mimeTypes: ["image/jpeg"],
+  image: {
+    minWidth: 600,
+    minHeight: 600,
+    maxWidth: 1200,
+    maxHeight: 1200,
+    aspectRatio: 1,
+    description: "2×2 in (600×600 to 1200×1200 px, square), JPEG ≤ 240 KB",
+  },
+} as const;
+
+export const VISA_US_B2: DocumentChecklist = {
+  id: "visa-us-b2",
+  title: "US B-2 Tourist / Visitor Visa",
+  category: "visa",
+  country: "United States",
+  estimatedDays: 21,
+  items: [
+    {
+      id: "ds-160",
+      label: "DS-160 confirmation page",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf"],
+      officialSourceUrl: CEAC,
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf"] },
+    },
+    {
+      id: "photo",
+      label: "Digital visa photo (2×2 in square)",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["image/jpeg"],
+      officialSourceUrl: PHOTO_URL,
+      validation: US_VISA_PHOTO,
+    },
+    {
+      id: "passport",
+      label: "Passport valid 6+ months beyond stay",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "mrv-fee",
+      label: "MRV visa application fee receipt ($185)",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "appointment",
+      label: "Visa interview appointment confirmation",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      officialSourceUrl: "https://www.ustraveldocs.com",
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "travel-itinerary",
+      label: "Travel itinerary",
+      description: "Flights and accommodation for the full trip.",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validationHints: ["Round-trip itinerary", "Accommodation covers the full stay"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "invitation",
+      label: "Invitation letter (if visiting family/friends)",
+      required: false,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "financial-proof",
+      label: "Financial proof (bank statements / pay stubs)",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validationHints: ["Last 3 months of statements", "Balance sufficient to cover trip"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "employer-letter",
+      label: "Letter from employer / proof of employment",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validationHints: ["On letterhead, confirms position and approved leave"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "ties-home",
+      label: "Proof of ties to home country",
+      description: "Property, family, continued employment.",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+  ],
+};

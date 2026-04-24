@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Upload, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
+import { validateFile } from "@/lib/fileValidation";
+import type { FileValidationRules } from "@/data/checklists";
 
 export type ValidationResult = {
   status: "pass" | "warn" | "fail" | "unknown";
@@ -21,6 +23,7 @@ type Props = {
   visaTitle: string;
   accept?: string;
   initial?: ValidationResult;
+  validation?: FileValidationRules;
   onResult: (r: ValidationResult) => void;
 };
 
@@ -32,6 +35,7 @@ export default function UploadAndValidate({
   visaTitle,
   accept = "application/pdf,image/*",
   initial,
+  validation,
   onResult,
 }: Props) {
   const [result, setResult] = useState<ValidationResult | undefined>(initial);
@@ -39,6 +43,7 @@ export default function UploadAndValidate({
   const [phase, setPhase] = useState<"idle" | "uploading" | "validating">("idle");
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [localErrors, setLocalErrors] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setResult(initial), [initial]);
@@ -48,6 +53,15 @@ export default function UploadAndValidate({
     setPhase("uploading");
     setProgress(0);
     setError(null);
+    setLocalErrors([]);
+
+    const pre = await validateFile(file, validation);
+    if (!pre.ok) {
+      setLocalErrors(pre.errors);
+      setLoading(false);
+      setPhase("idle");
+      return;
+    }
     // Smooth indeterminate-style ramp while we wait on Claude
     const ramp = setInterval(() => {
       setProgress((p) => (p < 90 ? p + 3 : p));
@@ -122,6 +136,17 @@ export default function UploadAndValidate({
       )}
 
       {error && <p className="text-xs text-destructive">{error}</p>}
+
+      {localErrors.length > 0 && (
+        <div className="rounded-md border border-destructive/40 bg-destructive/5 p-2 text-xs text-destructive">
+          <p className="mb-1 font-medium">File doesn&apos;t meet requirements:</p>
+          <ul className="ml-1 list-disc pl-4">
+            {localErrors.map((e, i) => (
+              <li key={i}>{e}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {result && result.reasons.length > 0 && (
         <ul className="ml-1 list-disc space-y-1 pl-4 text-xs text-muted-foreground">

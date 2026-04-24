@@ -1,0 +1,138 @@
+import type { DocumentChecklist } from "../../checklists";
+
+const CEAC = "https://ceac.state.gov/genniv/";
+const USCIS_H1B = "https://www.uscis.gov/working-in-the-united-states/temporary-workers/h-1b-specialty-occupations";
+
+const US_VISA_PHOTO = {
+  maxBytes: 240 * 1024,
+  mimeTypes: ["image/jpeg"],
+  image: {
+    minWidth: 600,
+    minHeight: 600,
+    maxWidth: 1200,
+    maxHeight: 1200,
+    aspectRatio: 1,
+    description: "2×2 in (600×600 to 1200×1200 px, square), JPEG ≤ 240 KB",
+  },
+} as const;
+
+export const VISA_US_H1B: DocumentChecklist = {
+  id: "visa-us-h1b",
+  title: "US H-1B Specialty Occupation Visa",
+  category: "visa",
+  country: "United States",
+  estimatedDays: 60,
+  items: [
+    {
+      id: "i-797",
+      label: "Form I-797 (H-1B petition approval notice)",
+      description: "Issued by USCIS to the petitioning employer.",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      officialSourceUrl: USCIS_H1B,
+      validationHints: [
+        "Petition approved (Notice of Action Type: Approval)",
+        "Beneficiary name matches passport",
+        "Employer name and validity dates visible",
+      ],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "i-129-copy",
+      label: "Copy of Form I-129 petition filed by employer",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf"] },
+    },
+    {
+      id: "lca",
+      label: "Certified Labor Condition Application (LCA)",
+      description: "ETA Form 9035 certified by the Department of Labor.",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf"],
+      validationHints: ["Case status: Certified", "Position, wage, and worksite match the I-129"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf"] },
+    },
+    {
+      id: "ds-160",
+      label: "DS-160 confirmation page",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf"],
+      officialSourceUrl: CEAC,
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf"] },
+    },
+    {
+      id: "photo",
+      label: "Digital visa photo (2×2 in square)",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["image/jpeg"],
+      validation: US_VISA_PHOTO,
+    },
+    {
+      id: "passport",
+      label: "Passport valid 6+ months beyond stay",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "mrv-fee",
+      label: "MRV visa fee receipt ($205)",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "appointment",
+      label: "Visa interview appointment confirmation",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "employer-letter",
+      label: "Employer offer letter and support letter",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validationHints: [
+        "States position, salary and start date",
+        "Confirms the role is a specialty occupation",
+      ],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "degree-evidence",
+      label: "Degree certificates and evaluations",
+      description: "Bachelor's-or-higher degree in the relevant field, plus any credential evaluation.",
+      required: true,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "experience-letters",
+      label: "Experience letters from previous employers",
+      required: false,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+    {
+      id: "pay-stubs",
+      label: "Recent pay stubs (if already on H-1B with another employer)",
+      required: false,
+      uploadable: true,
+      acceptedMimeTypes: ["application/pdf", "image/*"],
+      validation: { maxBytes: 10 * 1024 * 1024, mimeTypes: ["application/pdf", "image/*"] },
+    },
+  ],
+};
